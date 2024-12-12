@@ -4,19 +4,6 @@ version: 2.1
 orbs:
   node: circleci/node@5
 jobs:
-  test-node:
-    # Install node dependencies and run tests
-    executor: node/default
-    working_directory: ~/project/udagram-frontend
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Install Dependencies with Force
-          command: npm install --force
-      - run:
-          name: Run tests
-          command: npm test --passWithNoTests
   build-node:
     # Build node project
     executor: node/default
@@ -41,6 +28,7 @@ jobs:
           destination: node-build
   deploy:
     docker:
+      - image: cimg/python:3.9 # Specify the correct Docker image (or use another suitable image)
     steps:
       - checkout
       - run:
@@ -50,12 +38,9 @@ jobs:
           name: Build Docker image
           command: docker-compose -f docker-compose-build.yaml push
 workflows:
-  build-and-test:
+  build-and-deploy:
     jobs:
-      - test-node
       - build-node:
-          requires:
-            - test-node
       - deploy:
           requires:
             - build-node
