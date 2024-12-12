@@ -1,47 +1,22 @@
-# This config was automatically generated from your source code
-# Stacks detected: cicd:github-actions:.github/workflows,deps:node:udagram-frontend
-version: 2.1
-orbs:
-  node: circleci/node@5
-jobs:
-  build-node:
-    # Build node project
-    environment:
-      NODE_OPTIONS: "--openssl-legacy-provider"
-    executor: node/default
-    working_directory: ~/project/udagram-frontend
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Install Dependencies with Force
-          command: npm install --force
-      - run:
-          command: npm run build
-      - run:
-          name: Create the ~/artifacts directory if it doesn't exist
-          command: mkdir -p ~/artifacts
-      # Copy output to artifacts dir
-      - run:
-          name: Copy artifacts
-          command: cp -R build dist public .output .next .docusaurus ~/artifacts 2>/dev/null || true
-      - store_artifacts:
-          path: ~/artifacts
-          destination: node-build
-  deploy:
-    docker:
-      - image: cimg/python:3.9
-    steps:
-      - run:
-          name: Log in to Docker Hub
-          command: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - run:
-          name: Build Docker image
-          command: docker-compose -f docker-compose-build.yaml push
-workflows:
-  build-and-deploy:
-    jobs:
-      - build-node
-      - deploy:
-          requires:
-            - build-node
+language: node_js
+node_js:
+  - 16
+
+services:
+  - docker
+
+script:
+# Build
+  - docker-compose -f docker-compose-build.yaml build
+# Tag
+  - docker tag udagram-api-feed nhungntc21/udagram-api-feed:latest
+  - docker tag udagram-api-user nhungntc21/udagram-api-user:latest
+  - docker tag udagram-frontend nhungntc21/udagram-frontend:latest
+  - docker tag reverseproxy nhungntc21/reverseproxy:latest
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+# Push
+  - docker push nhungntc21/udagram-api-feed
+  - docker push nhungntc21/udagram-api-user
+  - docker push nhungntc21/udagram-frontend
+  - docker push nhungntc21/reverseproxy
