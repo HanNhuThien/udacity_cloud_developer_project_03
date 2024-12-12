@@ -30,7 +30,6 @@ jobs:
           command: |
             docker push nhungntc21/udagram-api-feed
             docker push nhungntc21/udagram-api-user
-            docker push nhungntc21/udagram-frontend
             docker push nhungntc21/reverseproxy
 
 workflows:
