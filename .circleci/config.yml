@@ -6,6 +6,8 @@ orbs:
 jobs:
   build-node:
     # Build node project
+    environment:
+      NODE_OPTIONS: "--openssl-legacy-provider"
     executor: node/default
     working_directory: ~/project/udagram-frontend
     steps:
@@ -27,8 +29,8 @@ jobs:
           path: ~/artifacts
           destination: node-build
   deploy:
-    docker:
-      - image: cimg/python:3.9
+    environment:
+      NODE_OPTIONS: "--openssl-legacy-provider"
     steps:
       - run:
           name: Log in to Docker Hub
