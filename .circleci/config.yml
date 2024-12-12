@@ -28,9 +28,8 @@ jobs:
           destination: node-build
   deploy:
     docker:
-      - image: cimg/python:3.9 # Specify the correct Docker image (or use another suitable image)
+      - image: cimg/python:3.9
     steps:
-      - checkout
       - run:
           name: Log in to Docker Hub
           command: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
@@ -40,7 +39,7 @@ jobs:
 workflows:
   build-and-deploy:
     jobs:
-      - build-node:
+      - build-node
       - deploy:
           requires:
             - build-node
