@@ -29,8 +29,6 @@ jobs:
           path: ~/artifacts
           destination: node-build
   deploy:
-    environment:
-      NODE_OPTIONS: "--openssl-legacy-provider"
     steps:
       - run:
           name: Log in to Docker Hub
