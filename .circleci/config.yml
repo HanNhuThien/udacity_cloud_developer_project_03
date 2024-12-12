@@ -11,8 +11,9 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - node/install-packages:
-          pkg-manager: npm
+      - run:
+          name: Install Dependencies with Force
+          command: npm install --force
       - run:
           name: Run tests
           command: npm test --passWithNoTests
@@ -23,8 +24,9 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - node/install-packages:
-          pkg-manager: npm
+      - run:
+          name: Install Dependencies with Force
+          command: npm install --force
       - run:
           command: npm run build
       - run:
