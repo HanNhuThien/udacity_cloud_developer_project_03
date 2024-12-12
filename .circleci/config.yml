@@ -40,20 +40,15 @@ jobs:
           path: ~/artifacts
           destination: node-build
   deploy:
-    # Log in to Docker Hub using environment variables
-    - run:
-        name: Log in to Docker Hub
-        command: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-
-    # Build the Docker image
-    - run:
-        name: Build Docker image
-        command: docker-compose -f docker-compose-build.yaml push
-
-    # # Push the Docker image to Docker Hub
-    # - run:
-    #     name: Push Docker image to Docker Hub
-    #     command: docker push $DOCKER_USERNAME/your-image-name:latest
+    docker:
+    steps:
+      - checkout
+      - run:
+          name: Log in to Docker Hub
+          command: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - run:
+          name: Build Docker image
+          command: docker-compose -f docker-compose-build.yaml push
 workflows:
   build-and-test:
     jobs:
