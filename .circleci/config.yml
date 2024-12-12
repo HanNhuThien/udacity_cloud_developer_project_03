@@ -4,6 +4,19 @@ version: 2.1
 orbs:
   node: circleci/node@5
 jobs:
+  test-node:
+    # Install node dependencies and run tests
+    executor: node/default
+    working_directory: ~/project/udagram-frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Install Dependencies with Force
+          command: npm install --force
+      - run:
+          name: Run tests
+          command: npm test --passWithNoTests
   build-node:
     # Build node project
     executor: node/default
@@ -41,7 +54,10 @@ jobs:
 workflows:
   build-and-test:
     jobs:
+      - test-node
       - build-node:
+          requires:
+            - test-node
     # - deploy:
     #     requires:
     #       - build-node
