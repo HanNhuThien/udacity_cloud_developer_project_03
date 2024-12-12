@@ -29,6 +29,8 @@ jobs:
           path: ~/artifacts
           destination: node-build
   deploy:
+    docker:
+      - image: cimg/python:3.9
     steps:
       - run:
           name: Log in to Docker Hub
